@@ -1,0 +1,17 @@
+﻿# Julia-specific ignores
+*.jl.cov
+*.jl.*
+*.ji
+.julia/
+.vscode/
+
+# Project-specific ignores
+logs/
+data/*.csv
+*.yaml
+Manifest.toml
+
+# General ignores
+*.log
+.DS_Store
+.ipynb_checkpoints/
