@@ -1,36 +1,7 @@
 ﻿### 项目概述
 我们要做的是编写一个用于处理 CleanMast 数据的 Julia 项目。目标是完成以下两步：
 1. **解析列信息**：从 CSV 文件中灵活解析列名，识别不同的数据类型。
-2. **数据清洗**：根据指定的规则检测并修正错误的时间戳，确保数据的质量。
-
-### 初始化项目
-在我们正式开始之前，首先需要初始化一个 Julia 项目。下面是初始化项目的步骤：
-
-1. **创建新项目**：在终端中运行以下命令来创建一个新的 Julia 项目。
-   ```sh
-   julia --project="." -e 'using Pkg; Pkg.generate("CleanMastProject")'
-   cd CleanMastProject
-   ```
-
-2. **添加必要的依赖项**：在 `CleanMastProject` 中，添加一些必要的包，比如 CSV 和 DataFrames，用于数据处理。
-   ```julia
-   import Pkg
-   Pkg.add(["CSV", "DataFrames", "Dates", "Logging", "YAML"])
-   ```
-
-3. **设置项目结构**：项目结构将包括以下内容：
-   - **src/**：包含主代码文件，比如 `CleanMast.jl`，用于实现数据解析和清洗。
-   - **test/**：包含测试代码，确保所有功能按预期工作。
-   - **data/**：用于存放 CSV 数据文件。
-   - **logs/**：用于存放数据清洗过程中的日志文件。
-
-4. **版本管理**：建议使用 Git 作为版本控制系统。
-   - 初始化 Git 仓库：
-     ```sh
-     git init
-     git add .
-     git commit -m "Initial commit with project structure"
-     ```
+2. **数据清洗**：根据指定的规则检测并修正错误的数据，确保数据的质量。
 
 ### 命令行输入
 我们将创建一个命令行工具，接受一个目录路径作为输入，并检查该路径下是否存在 `config.yaml` 文件。
@@ -89,6 +60,19 @@
 2. **输出**：
    - **清洗后的 CSV 文件**：输出将是修正过的 CSV 文件，其中的错误时间戳已经修复，且数据质量得到了保证。
    - **日志文件**：用于记录数据清洗过程中的发现和修正的信息，例如哪些时间戳有问题，以及如何修正的。
+
+### 示例配置文件
+在 `example_project/` 目录下包含一个示例的 `config.yaml` 文件，其中包含关于 mast 数据的配置信息。以下是注释后的 `config.yaml` 示例：
+```yaml
+Mast:
+  data_path: data.csv  # 相对路径（相对于 config.yaml），指向数据文件的位置。
+  skip_to: 0  # 指定从 CSV 中跳过的行数，通常用于跳过文件头部的无效行。
+  sensor:
+    column_format: "*_SensorType_SensorDirection_SensorHeight_*"  # 拼写修正后的字段格式，用于解析列名。
+    timestamp_column: DateTime  # 指定时间戳列的名称。
+    timestamp_format: "yyyy-MM-dd HH:mm"  # 修正后的标准时间格式，与 Julia 的解析格式兼容。
+  # cleaning_rules: 忽略清洗规则部分，稍后再进行讨论。
+```
 
 ### 关键步骤
 **步骤 1：解析列信息**
